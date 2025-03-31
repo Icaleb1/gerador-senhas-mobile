@@ -27,22 +27,20 @@ export default function App() {
       </View>
       <View style={styles.buttonsView}>
            
-          <View style={styles.senhaView}>
-            <Text style={styles.senhaText}>{senha}</Text>
+          <View style={styles.labelView}>
+            <Text style={styles.textView}>{senha}</Text>
           </View> 
 
          
           <TouchableOpacity style={styles.buttonView} onPress={(click)}>
-            <Text style={styles.senhaText}>Gerar</Text>
+            <Text style={styles.textButtonView}>Gerar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.buttonView} onPress={(click)}>
-            <Text style={styles.senhaText}>Copiar</Text>
+            <Text style={styles.textButtonView}>Copiar</Text>
           </TouchableOpacity>
       
       </View>
-
-
     </View>
   );
 }
@@ -57,7 +55,9 @@ const styles = StyleSheet.create({
   },
   titulo:{
     fontSize: 36,
-    
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#010440",
   },
   tittleview:{
     width: "100%",
@@ -81,23 +81,37 @@ const styles = StyleSheet.create({
   buttonView:{
     width: "70%",
     height: "12%",
-    backgroundColor: "white",
+    backgroundColor: "#5288F2",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 6,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#1B0273",
 
   },
-  senhaText:{
+  textView:{
     fontSize: 32,
     alignSelf: "center",
+    fontWeight: "bold",
+    color: "#011126",
   },
-  senhaView:{
+  textButtonView:{
+    fontSize: 32,
+    alignSelf: "center",
+    fontWeight: "bold",
+    color: "#F2F2F2",
+
+  },
+  labelView:{
     width: "70%",
     height: "12%",
-    backgroundColor: "white",
+    backgroundColor: "#F2DCF1",
+    borderWidth: 2,
+    borderColor: "#1B0273",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 6,
+    borderRadius: 8,
   },
+
 
 });
