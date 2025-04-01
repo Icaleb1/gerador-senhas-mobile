@@ -2,16 +2,20 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from 'react-native';
 import logo from './assets/iconeSenha.png';
 import  SenhaService  from './src/service/SenhaService';
+import { useState } from 'react';
 
 export default function App() {
+  const [senha, setSenha] = useState("gerar senha");
 
   const service = new SenhaService()
-  const senha = service.gerarSenha();
-
-  console.log(service)
 
   const click = () => {
-    console.log("clique", senha);
+    setSenha(service.gerarSenha());
+  };
+
+  const copiar = () => {
+    service.copiarSenha(senha);
+    console.log(senha);
   };
 
   return (
@@ -19,7 +23,7 @@ export default function App() {
       <StatusBar style="auto" />
 
       <View style={styles.tittleview}>
-        <Text style={styles.titulo}>Gerador de senha</Text>
+        <Text style={styles.titulo}>Gerador de senhas</Text>
       </View>
 
       <View style={styles.iconView}>
@@ -40,7 +44,7 @@ export default function App() {
             <Text style={styles.textButtonView}>Gerar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonView} onPress={(click)}>
+          <TouchableOpacity style={styles.buttonView} onPress={(copiar)}>
             <Text style={styles.textButtonView}>Copiar</Text>
           </TouchableOpacity>
       
