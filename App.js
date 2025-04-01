@@ -1,12 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from 'react-native';
+import logo from './assets/iconeSenha.png';
+import  SenhaService  from './src/service/SenhaService';
 
 export default function App() {
-  const icone = "/home/caleb/Documentos/projetos/geradorSenhas/assets/iconeSenha.png";
-  const senha = "senha";
+
+  const service = new SenhaService()
+  const senha = service.gerarSenha();
+
+  console.log(service)
 
   const click = () => {
-    console.log("clique");
+    console.log("clique", senha);
   };
 
   return (
@@ -21,8 +26,7 @@ export default function App() {
         <Image
           style={{ width: 350, height: 180}}
           resizeMode="contain"
-          source={
-              require(icone) }
+          source={logo}
         />
       </View>
       <View style={styles.buttonsView}>
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
   },
   buttonView:{
     width: "70%",
-    height: "12%",
+    height: "16%",
     backgroundColor: "#5288F2",
     alignItems: "center",
     justifyContent: "center",
@@ -94,17 +98,19 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontWeight: "bold",
     color: "#011126",
+    paddingBottom: 6,
   },
   textButtonView:{
     fontSize: 32,
     alignSelf: "center",
     fontWeight: "bold",
     color: "#F2F2F2",
+    paddingBottom: 6,
 
   },
   labelView:{
     width: "70%",
-    height: "12%",
+    height: "16%",
     backgroundColor: "#F2DCF1",
     borderWidth: 2,
     borderColor: "#1B0273",
@@ -112,6 +118,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
   },
-
-
 });
