@@ -1,22 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, Pressable } from 'react-native';
-import logo from "../../../assets/iconeSenha.png";
-import  SenhaService  from './src/service/SenhaService';
+import logo from "../../assets/iconeSenha.png";
+import { gerarSenha } from '../service/SenhaService';  
 import { useState } from 'react';
 
-export default function Home(){  
+export default function TelaInicial({navigation}){ 
     const [senha, setSenha] = useState("gerar senha");
 
-    const service = new SenhaService()
-
-    const click = () => {
-    setSenha(service.gerarSenha());
+    const coletarSenha = () => {
+        setSenha(gerarSenha());
     };
 
-    const copiar = () => {
-    service.copiarSenha(senha);
-    console.log(senha);
+    const copiar = async () => { 
+        await Clipboard.setStringAsync(senha);
     };
+
+    const histórico = async () => {
+        navigation.navigate("historico");
+    };
+   
 
     return (
     <View style={styles.container}>
@@ -40,7 +42,7 @@ export default function Home(){
             </View> 
 
             
-            <TouchableOpacity style={styles.buttonView} onPress={(click)}>
+            <TouchableOpacity style={styles.buttonView} onPress={(coletarSenha)}>
             <Text style={styles.textButtonView}>Gerar</Text>
             </TouchableOpacity>
 
@@ -48,9 +50,9 @@ export default function Home(){
             <Text style={styles.textButtonView}>Copiar</Text>
             </TouchableOpacity>
 
-            <View>
-            <Pressable>Ver histórico</Pressable>
-            </View>
+            <TouchableOpacity>
+            <Text style={styles.historico}>Ver histórico</Text>
+            </TouchableOpacity>
         </View>
     </View>
     );
@@ -72,13 +74,13 @@ const styles = StyleSheet.create({
     },
     tittleview:{
     width: "100%",
-    height: "25%",
+    height: "15%",
     alignItems: "center",
     justifyContent: "flex-end",
     },
     iconView:{
     width: "100%",
-    height: "25%",
+    height: "30%",
     alignItems: "center",
     justifyContent: "center"
     },
@@ -87,11 +89,11 @@ const styles = StyleSheet.create({
     height: "50%",
     justifyContent: "flex-start",
     alignItems: "center",
-    gap: 32,
+    gap: 45,
     },
     buttonView:{
-    width: "70%",
-    height: "16%",
+    width: "60%",
+    height: "14%",
     backgroundColor: "#5288F2",
     alignItems: "center",
     justifyContent: "center",
@@ -124,5 +126,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 8,
+    },
+    historico:{
+        paddingTop: 0,
+        fontWeight: "bold",
+        color: "white",
+        fontSize: 15,
     },
 });
