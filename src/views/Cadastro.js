@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 export default function Cadastro({ navigation }) {
@@ -7,22 +7,23 @@ export default function Cadastro({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [isValid, setIsValid] = useState(false); 
+  const [isValid, setIsValid] = useState(false);
 
   const validarFormulario = () => {
-    setIsValid(
-      nome.trim() &&
-      email.trim() &&
-      senha.trim() &&
-      confirmarSenha.trim()
-    );
+
+    if (nome.trim() &&
+        email.trim() &&
+        senha.trim() &&
+        confirmarSenha.trim()){
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
   };
-  
 
   useEffect(() => {
     validarFormulario();
-  }, [nome, email, senha, confirmarSenha]);
-
+  }, [nome, email, senha, confirmarSenha ]);
 
 
   const nvgLogin = () => {
@@ -31,7 +32,7 @@ export default function Cadastro({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.tituloInicial}>Cadastre-se</Text>
+      <Text style={styles.tituloInicial}>Cadastro</Text>
       
       <View style={styles.formContainer}>
         <View style={styles.inputGroup}>
@@ -39,21 +40,22 @@ export default function Cadastro({ navigation }) {
           <TextInput
             style={styles.input}
             placeholder="Digite seu nome"
+            keyboardType="text"
             placeholderTextColor="#555"
             value={nome}
-            onChangeText={(text) => setNome(text)}
+            onChangeText={(text) => setNome(text)} 
           />
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>E-mail: *</Text>
+          <Text style={styles.label}>Email: *</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite seu e-mail"
+            placeholder="Digite seu email"
             keyboardType="email-address"
             placeholderTextColor="#555"
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => setEmail(text)} 
           />
         </View>
 
@@ -70,10 +72,10 @@ export default function Cadastro({ navigation }) {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Confirmar Senha: *</Text>
+          <Text style={styles.label}>Confirmar senha: *</Text>
           <TextInput
             style={styles.input}
-            placeholder="Confirme sua senha"
+            placeholder="Digite sua senha"
             secureTextEntry={true}
             placeholderTextColor="#555"
             value={confirmarSenha}
@@ -81,13 +83,23 @@ export default function Cadastro({ navigation }) {
           />
         </View>
 
+
         <TouchableOpacity
-          style={[styles.buttonEntrar, isValid ? {} : styles.buttonDisabilitado]}
-          onPress={nvgLogin}
-          disabled={!isValid}
+          style={[styles.buttonEntrar, isValid ? {} : styles.buttonDisabilitado]} 
+          onPress={nvgLogin} 
+          disabled={!isValid} 
         >
-          <Text style={styles.textButton}>Cadastrar</Text>
+          <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
+
+        <View style={styles.textoPossuiConta}>
+
+          <TouchableOpacity 
+            style={styles.textoCadastro} 
+            onPress={nvgLogin}>
+            <Text style={styles.textoRota}>Possui uma conta?</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -98,13 +110,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F2C4B3",
     alignItems: 'center',
-    paddingTop: 150,
+    paddingTop: 100,
   },
   tituloInicial: {
-    color: "#010440",
+    color: "white",
     fontSize: 40,
     fontWeight: 'bold',
     paddingBottom: 20,
+    color: "#010440",
   },
   formContainer: {
     width: '100%',
@@ -148,7 +161,23 @@ const styles = StyleSheet.create({
   },
   textButton: {
     fontWeight: 'bold',
-    color: "white",
+    color: "#F2F2F2",
     fontSize: 25,
+  },
+  textoPossuiConta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 15,
+  },
+  textoRota: {
+    fontWeight: 'bold', 
+    color: "white",
+    fontSize: 15,
+  },
+  textoCadastro: {
+    fontWeight: 'bold',
+    color: "#ADD8E6",
+    fontSize: 15,
+    marginLeft: 5,
   },
 });

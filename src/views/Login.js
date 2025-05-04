@@ -34,7 +34,7 @@ export default function Login({ navigation }) {
       
       <View style={styles.formContainer}>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>Email: *</Text>
           <TextInput
             style={styles.input}
             placeholder="Digite seu email"
@@ -46,7 +46,7 @@ export default function Login({ navigation }) {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Senha</Text>
+          <Text style={styles.label}>Senha: *</Text>
           <TextInput
             style={styles.input}
             placeholder="Digite sua senha"
@@ -66,8 +66,12 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
 
         <View style={styles.textoPossuiConta}>
-          <Text style={styles.textoRota}>Não possui uma conta?</Text>
-          <TouchableOpacity style={styles.textoCadastro} onPress={nvgCadastro}>Cadastre-se</TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.textoCadastro} 
+            onPress={nvgCadastro}>
+            <Text style={styles.textoRota}>Não possui uma conta?</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F2C4B3",
     alignItems: 'center',
-    paddingTop: 150,
+    paddingTop: 100,
   },
   tituloInicial: {
     color: "white",

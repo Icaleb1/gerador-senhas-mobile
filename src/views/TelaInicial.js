@@ -1,11 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, Pressable } from 'react-native';
 import logo from "../../assets/iconeSenha.png";
-import { gerarSenha } from '../service/SenhaService';  
+import { gerarSenha, salvarSenha } from '../service/SenhaService';  
 import { useState } from 'react';
+import ModalSalvar from '../components/ModalSalvar';
 
 export default function TelaInicial({navigation}){ 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [tag, setTag] = useState("");
     const [senha, setSenha] = useState("gerar senha");
+
+    const salvarSenhaComTag = async () => {
+        await salvarSenha(senha, tag); 
+        setTag(""); 
+    };
+    
 
     const coletarSenha = () => {
         setSenha(gerarSenha());
@@ -15,6 +24,10 @@ export default function TelaInicial({navigation}){
         await Clipboard.setStringAsync(senha);
     };
 
+    const salvarSenha = async () => {
+        setModalVisible(true);
+    }
+
     const histórico = async () => {
         navigation.navigate("historico");
     };
@@ -22,6 +35,16 @@ export default function TelaInicial({navigation}){
 
     return (
     <View style={styles.container}>
+        <ModalSalvar
+        visible={modalVisible} 
+        onClose={() => setModalVisible(false)}
+        onConfirm={() => {
+            salvarSenha(tag, senha);
+            setModalVisible(true);
+        }} 
+        tag={tag}
+        setTag={setTag}
+        />
         <StatusBar style="auto" />
 
         <View style={styles.tittleview}>
@@ -46,6 +69,10 @@ export default function TelaInicial({navigation}){
             <Text style={styles.textButtonView}>Gerar</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.buttonView} onPress={() => setModalVisible(true)}>
+            <Text style={styles.textButtonView}>Salvar</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.buttonView} onPress={(copiar)}>
             <Text style={styles.textButtonView}>Copiar</Text>
             </TouchableOpacity>
@@ -64,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2C4B3',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8
+    gap: 6
     },
     titulo:{
     fontSize: 36,
@@ -89,7 +116,7 @@ const styles = StyleSheet.create({
     height: "50%",
     justifyContent: "flex-start",
     alignItems: "center",
-    gap: 45,
+    gap: 25,
     },
     buttonView:{
     width: "60%",
