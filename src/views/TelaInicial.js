@@ -1,21 +1,45 @@
+import { useEffect, useState } from 'react';
+import * as Clipboard from 'expo-clipboard';
+import { carregarHistorico, salvarSenhaComNome, gerarSenha } from '../service/SenhaService';
+
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import logo from "../../assets/iconeSenha.png";
-import { gerarSenha, salvarSenha } from '../service/SenhaService';  
-import { useState } from 'react';
 import ModalSalvar from '../components/ModalSalvar';
+
 
 export default function TelaInicial({navigation}){ 
     const [modalVisible, setModalVisible] = useState(false);
-    const [tag, setTag] = useState("");
+    const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("gerar senha");
+    const [historico, setHistorico] = useState([]);
 
-    const salvarSenhaComTag = async () => {
-        await salvarSenha(senha, tag); 
-        setTag(""); 
-    };
-    
-
+    useEffect(() => {
+        const carregar = async () => {
+          const lista = await carregarHistorico();
+          setHistorico(lista);
+        };
+        carregar();
+      }, []);
+      
+      const salvarSenha = async () => {
+        if (!nome.trim()) {
+          Alert.alert('Erro', 'O nome não pode estar vazio.');
+          return;
+        }
+      
+        try {
+          await salvarSenhaComNome(nome, senha);
+          const listaAtualizada = await carregarHistorico();
+          setHistorico(listaAtualizada);
+          setNome('');
+          setModalVisible(false);
+          Alert.alert('Sucesso', 'Senha salva com sucesso!');
+        } catch (e) {
+          Alert.alert('Erro', e.message);
+        }
+      };
+  
     const coletarSenha = () => {
         setSenha(gerarSenha());
     };
@@ -24,11 +48,7 @@ export default function TelaInicial({navigation}){
         await Clipboard.setStringAsync(senha);
     };
 
-    const salvarSenha = async () => {
-        setModalVisible(true);
-    }
-
-    const histórico = async () => {
+    const nvgHistorico = async () => {
         navigation.navigate("historico");
     };
    
@@ -38,12 +58,13 @@ export default function TelaInicial({navigation}){
         <ModalSalvar
         visible={modalVisible} 
         onClose={() => setModalVisible(false)}
-        onConfirm={() => {
-            salvarSenha(tag, senha);
-            setModalVisible(true);
+        onConfirm={async () => {
+            await salvarSenha();
+            setModalVisible(false);
         }} 
-        tag={tag}
-        setTag={setTag}
+        nome={nome}
+        setNome={setNome}
+        senha={senha}
         />
         <StatusBar style="auto" />
 
@@ -78,7 +99,7 @@ export default function TelaInicial({navigation}){
             </TouchableOpacity>
 
             <TouchableOpacity>
-            <Text style={styles.historico}>Ver histórico</Text>
+            <Text style={styles.historico} onPress={(nvgHistorico)}>Ver histórico</Text>
             </TouchableOpacity>
         </View>
     </View>

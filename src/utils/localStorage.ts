@@ -19,7 +19,7 @@ export const setDataStorage = async (key, data) => {
         console.error("Erro ao salvar informações no armazenamento local:", e);
     }
 };
-export const limparDados = async (key) => {
+export const cleanDataStorage = async (key) => {
     try {
         await AsyncStorage.removeItem(key);
     }

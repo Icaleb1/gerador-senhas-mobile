@@ -1,8 +1,6 @@
 import { Modal, Pressable, View, TextInput, Text, StyleSheet } from "react-native";
 
-
-
-export default function ModalSalvar({ visible, onClose, onConfirm, tag, setTag }) {
+export default function ModalSalvar({ visible, onClose, onConfirm, nome, setNome, senha }) {
     return (
         <Modal
             visible={visible}
@@ -12,13 +10,21 @@ export default function ModalSalvar({ visible, onClose, onConfirm, tag, setTag }
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text style={styles.modalText} >Informe a tag:</Text>
+                    <Text style={styles.modalText} >Informe o Nome:</Text>
                     <TextInput
-                        style={styles.input}
-                        value={tag}
-                        onChangeText={setTag}
-                        placeholder="Ex: senha do e-mail"
+                      style={styles.input}
+                      value={nome}
+                      onChangeText={setNome}
+                      placeholder="Ex: senha do e-mail"
                     />
+
+                    <Text style={styles.modalText}>Senha Gerada:</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={senha}
+                      editable={false}
+                    />
+
                     <Pressable style={styles.button} onPress={onConfirm}>
                         <Text>Salvar</Text>
                     </Pressable>
