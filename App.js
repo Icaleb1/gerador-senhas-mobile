@@ -13,8 +13,12 @@ export default function App() {
         <Stack.Screen name="cadastro" component={Cadastro} options={{HeaderShown:false}}/>
         <Stack.Screen name="login" component={Login} options={{HeaderShown:false}}/>
         <Stack.Screen name="telaInicial" component={TelaInicial} options={{HeaderShown:false}}/>
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
 
 }
+
+
+// Trocar tudo para uma função que retornar o layout;
