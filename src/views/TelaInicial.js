@@ -6,6 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import logo from "../../assets/iconeSenha.png";
 import ModalSalvar from '../components/ModalSalvar';
+import Toast from 'react-native-toast-message';
+import { mostrarToast } from '../components/ToastFeedback';
 
 
 export default function TelaInicial({navigation}){ 
@@ -24,7 +26,7 @@ export default function TelaInicial({navigation}){
       
       const salvarSenha = async () => {
         if (!nome.trim()) {
-          Alert.alert('Erro', 'O nome não pode estar vazio.');
+          mostrarToast('error', 'Erro', 'O nome não pode estar vazio.',);
           return;
         }
       
@@ -34,9 +36,9 @@ export default function TelaInicial({navigation}){
           setHistorico(listaAtualizada);
           setNome('');
           setModalVisible(false);
-          Alert.alert('Sucesso', 'Senha salva com sucesso!');
+          mostrarToast('success', 'Sucesso', 'Senha salva com sucesso!',);
         } catch (e) {
-          Alert.alert('Erro', e.message);
+          mostrarToast('error', 'Erro ao salvar', e.message);
         }
       };
   
