@@ -1,30 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { signup } from '../service/auth/authService'; 
+import Toast from "react-native-toast-message";
+import { mostrarToast } from '../components/ToastFeedback';
+
 
 export default function Cadastro({ navigation }) {
-
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [senhasIguais, setSenhasIguais] = useState(true);
 
   const validarFormulario = () => {
-
-    if (nome.trim() &&
-        email.trim() &&
-        senha.trim() &&
-        confirmarSenha.trim()){
-      setIsValid(true);
-    } else {
-      setIsValid(false);
-    }
+    const camposPreenchidos = nome.trim() && email.trim() && senha.trim() && confirmarSenha.trim();
+    const senhasConferem = senha === confirmarSenha;
+    
+    setSenhasIguais(senhasConferem);
+    setIsValid(camposPreenchidos && senhasConferem);
   };
 
   useEffect(() => {
     validarFormulario();
-  }, [nome, email, senha, confirmarSenha ]);
+  }, [nome, email, senha, confirmarSenha]);
 
+  const handleCadastro = async () => {
+    if (!isValid) return;
+    
+    setIsLoading(true);
+    try {
+      const userData = await signup(nome, email, senha, confirmarSenha);      
+      mostrarToast('success', 'Sucesso', 'Cadastro realizado com sucesso!');
+      setTimeout(() => {
+        navigation.navigate("login");
+      }, 1500);
+      
+    } catch (error) {
+      mostrarToast('error', 'Erro no Cadastro', error.message || "Ocorreu um erro ao cadastrar");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const nvgLogin = () => {
     navigation.navigate("login");
@@ -40,10 +58,9 @@ export default function Cadastro({ navigation }) {
           <TextInput
             style={styles.input}
             placeholder="Digite seu nome"
-            keyboardType="text"
             placeholderTextColor="#555"
             value={nome}
-            onChangeText={(text) => setNome(text)} 
+            onChangeText={setNome}
           />
         </View>
 
@@ -55,7 +72,8 @@ export default function Cadastro({ navigation }) {
             keyboardType="email-address"
             placeholderTextColor="#555"
             value={email}
-            onChangeText={(text) => setEmail(text)} 
+            onChangeText={setEmail}
+            autoCapitalize="none"
           />
         </View>
 
@@ -67,7 +85,7 @@ export default function Cadastro({ navigation }) {
             secureTextEntry={true}
             placeholderTextColor="#555"
             value={senha}
-            onChangeText={(text) => setSenha(text)}
+            onChangeText={setSenha}
           />
         </View>
 
@@ -75,35 +93,38 @@ export default function Cadastro({ navigation }) {
           <Text style={styles.label}>Confirmar senha: *</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite sua senha"
+            placeholder="Confirme sua senha"
             secureTextEntry={true}
             placeholderTextColor="#555"
             value={confirmarSenha}
-            onChangeText={(text) => setConfirmarSenha(text)}
+            onChangeText={setConfirmarSenha}
           />
+          {!senhasIguais && (
+            <Text style={styles.errorText}>As senhas não coincidem</Text>
+          )}
         </View>
 
-
         <TouchableOpacity
-          style={[styles.buttonEntrar, isValid ? {} : styles.buttonDisabilitado]} 
-          onPress={nvgLogin} 
-          disabled={!isValid} 
+          style={[styles.buttonEntrar, !isValid && styles.buttonDisabilitado]} 
+          onPress={handleCadastro}
+          disabled={!isValid || isLoading}
         >
-          <Text style={styles.textButton}>Entrar</Text>
+          <Text style={styles.textButton}>
+            {isLoading ? "Cadastrando..." : "Cadastrar"}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.textoPossuiConta}>
-
-          <TouchableOpacity 
-            style={styles.textoCadastro} 
-            onPress={nvgLogin}>
-            <Text style={styles.textoRota}>Possui uma conta?</Text>
+          <TouchableOpacity onPress={nvgLogin}>
+            <Text style={styles.textoRota}>Já possui uma conta?</Text>
           </TouchableOpacity>
         </View>
       </View>
+      <Toast/>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
