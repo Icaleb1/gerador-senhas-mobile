@@ -110,7 +110,7 @@ export default function Cadastro({ navigation }) {
           disabled={!isValid || isLoading}
         >
           <Text style={styles.textButton}>
-            {isLoading ? "Cadastrando..." : "Cadastrar"}
+            {isLoading ? "..." : "Cadastrar"}
           </Text>
         </TouchableOpacity>
 

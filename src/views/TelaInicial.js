@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import * as Clipboard from 'expo-clipboard';
-import { carregarHistorico, salvarSenhaComNome, gerarSenha } from '../service/SenhaService';
+import { carregarHistorico, gerarSenha } from '../service/SenhaService';
 
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import logo from "../../assets/iconeSenha.png";
 import ModalSalvar from '../components/ModalSalvar';
-import Toast from 'react-native-toast-message';
 import { mostrarToast } from '../components/ToastFeedback';
+import { createItem } from '../service/auth/itemService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 
 export default function TelaInicial({navigation}){ 
@@ -26,29 +28,36 @@ export default function TelaInicial({navigation}){
       
       const salvarSenha = async () => {
         if (!nome.trim()) {
-          mostrarToast('error', 'Erro', 'O nome não pode estar vazio.',);
+          mostrarToast('error', 'Erro', 'O nome não pode estar vazio.');
           return;
         }
       
         try {
-          await salvarSenhaComNome(nome, senha);
-          const listaAtualizada = await carregarHistorico();
-          setHistorico(listaAtualizada);
-          setNome('');
+          const token = await AsyncStorage.getItem('token');
+          if (!token) {
+            throw new Error('Usuário não autenticado. Token não encontrado.');
+          }
+      
+          await createItem(nome, senha, token);
+      
           setModalVisible(false);
-          mostrarToast('success', 'Sucesso', 'Senha salva com sucesso!',);
+          mostrarToast('success', 'Sucesso', 'Senha salva com sucesso!');
         } catch (e) {
           mostrarToast('error', 'Erro ao salvar', e.message);
         }
       };
+      
+    
   
     const coletarSenha = () => {
         setSenha(gerarSenha());
     };
 
     const copiar = async () => { 
-        await Clipboard.setStringAsync(senha);
-    };
+      await Clipboard.setStringAsync(senha);
+      mostrarToast('success', 'Copiado', 'Senha copiada para a área de transferência.');
+  };
+    
 
     const nvgHistorico = async () => {
         navigation.navigate("historico");
@@ -104,6 +113,7 @@ export default function TelaInicial({navigation}){
             <Text style={styles.historico} onPress={(nvgHistorico)}>Ver histórico</Text>
             </TouchableOpacity>
         </View>
+        <Toast />
     </View>
     );
 }

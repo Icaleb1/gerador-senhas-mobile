@@ -15,24 +15,24 @@ const SenhasHistorico = ({ senhas, onDelete }) => {
     Alert.alert("Copiado", "Senha copiada para a área de transferência.");
   };
 
-  const deletarSenha = (index) => {
-    onDelete(index);
+  const deletarSenha = (id) => {
+    onDelete(id);
   };
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item }) => (
     <View style={styles.senhaBox}>
-      <Text style={styles.nome}>{item.nome}</Text>
+      <Text style={styles.nome}>{item.name}</Text>
       <View style={styles.linhaSenha}>
         <Text style={styles.senhaEscondida}>
-          {visiveis[index] ? item.senha : '********'}
+          {visiveis[item.id] ? item.password : '********'}
         </Text>
-        <TouchableOpacity onPress={() => alternarVisibilidade(index)}>
+        <TouchableOpacity onPress={() => alternarVisibilidade(item.id)}>
           <Text style={styles.icone}>😑</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => copiarSenha(item.senha)}>
+        <TouchableOpacity onPress={() => copiarSenha(item.password)}>
           <Text style={styles.icone}>✋</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => deletarSenha(index)}>
+        <TouchableOpacity onPress={() => deletarSenha(item.id)}>
           <Text style={styles.icone}>🗑️</Text>
         </TouchableOpacity>
       </View>
@@ -42,7 +42,7 @@ const SenhasHistorico = ({ senhas, onDelete }) => {
   return (
     <FlatList
       data={senhas}
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={(item) => item.id.toString()}
       renderItem={renderItem}
       style={styles.lista}
     />

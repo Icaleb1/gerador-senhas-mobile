@@ -1,28 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import SenhasHistorico from '../components/SenhasHistorico';
+import { deleteItem, getItens } from '../service/auth/itemService';
+import Toast from 'react-native-toast-message';
+import { mostrarToast } from '../components/ToastFeedback';
 
-export default function Historico() {
+export default function Historico() { 
   const [senhasSalvas, setSenhasSalvas] = useState([]);
+  const [token, setToken] = useState(null);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const carregarSenhas = async () => {
-      const dados = await AsyncStorage.getItem('senhas');
-      if (dados) {
-        setSenhasSalvas(JSON.parse(dados));
+    const carregarTokenESenhas = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('token');
+        if (!storedToken) {
+          mostrarToast('error', 'Erro', 'Token não encontrado. Faça login novamente.');
+          return;
+        }
+        setToken(storedToken);
+
+        const dados = await getItens(storedToken);
+        setSenhasSalvas(dados);
+      } catch (error) {
+        mostrarToast('error', 'Erro', error.message);
       }
     };
-    carregarSenhas();
+
+    carregarTokenESenhas();
   }, []);
 
-  const deletarSenha = async (index) => {
-    const novaLista = [...senhasSalvas];
-    novaLista.splice(index, 1);
-    await AsyncStorage.setItem('senhas', JSON.stringify(novaLista));
-    setSenhasSalvas(novaLista);
+  const deletarSenha = async (id) => {
+    if (!token) {
+      mostrarToast('error', 'Erro', 'Token não encontrado. Faça login novamente.');
+      return;
+    }
+
+    try {
+      await deleteItem(id, token);
+      const novaLista = senhasSalvas.filter(item => item.id !== id);
+      setSenhasSalvas(novaLista);
+      mostrarToast('success', 'Sucesso', 'Senha deletada com sucesso.');
+    } catch (error) {
+      mostrarToast('error', 'Erro ao deletar', error.message);
+    }
   };
 
   const nvgTelaInicial = () => {
@@ -43,6 +66,8 @@ export default function Historico() {
           <Text style={styles.textButton}>Voltar</Text>
         </TouchableOpacity>
       </View>
+
+      <Toast />
     </View>
   );
 }

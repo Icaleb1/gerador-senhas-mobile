@@ -78,7 +78,7 @@ export default function Login({ navigation }) {
           disabled={!isValid || isLoading}
         >
           <Text style={styles.textButton}>
-            {isLoading ? "Carregando..." : "Entrar"}
+            {isLoading ? "..." : "Entrar"}
           </Text>
         </TouchableOpacity>
 
