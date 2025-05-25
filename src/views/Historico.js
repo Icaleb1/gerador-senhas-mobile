@@ -55,6 +55,12 @@ export default function Historico() {
   return (
     <View style={styles.container}>
       <Text style={styles.tituloInicial}>Histórico de Senhas</Text>
+      {senhasSalvas.length === 0 && (
+      <Text style={styles.avisoSemItens}>
+        Nenhuma senha cadastrada até o momento.
+      </Text>
+    )}
+
       
       <SenhasHistorico 
         senhas={senhasSalvas} 
@@ -107,4 +113,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
   },
+  avisoSemItens: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#555',
+    marginVertical: 20,
+    fontStyle: 'italic',
+  }
+  
 });

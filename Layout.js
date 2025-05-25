@@ -16,10 +16,10 @@ export default function Layout() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');
-      if (token) {
-        setInitialRoute('telaInicial');
-      } else {
+      if (!token) {
         setInitialRoute('login');
+      } else {
+        setInitialRoute('telaInicial');
       }
     };
     checkAuth();

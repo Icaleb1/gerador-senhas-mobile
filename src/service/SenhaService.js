@@ -24,3 +24,6 @@ export const carregarHistorico = async () => {
     const dados = await AsyncStorage.getItem('senhas');
     return dados ? JSON.parse(dados) : [];
 };
+
+
+

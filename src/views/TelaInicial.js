@@ -62,6 +62,16 @@ export default function TelaInicial({navigation}){
     const nvgHistorico = async () => {
         navigation.navigate("historico");
     };
+
+    const logout = async () => {
+      try {
+          await AsyncStorage.removeItem('token');
+          navigation.replace('login');
+      } catch (e) {
+          mostrarToast('error', 'Erro', 'Erro ao fazer logout.');
+      }
+  };
+  
    
 
     return (
@@ -82,6 +92,10 @@ export default function TelaInicial({navigation}){
         <View style={styles.tittleview}>
         <Text style={styles.titulo}>Gerador de senhas</Text>
         </View>
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <Text style={styles.logoutText}>Deslogar</Text>
+        </TouchableOpacity>
+
 
         <View style={styles.iconView}>
         <Image
@@ -193,4 +207,20 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 15,
     },
+    logoutButton: {
+      position: 'absolute',
+      top: 30,
+      right: 20,
+      backgroundColor: '#FF5C5C',
+      padding: 10,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#A10000',
+  },
+  logoutText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16,
+  },
+  
 });
